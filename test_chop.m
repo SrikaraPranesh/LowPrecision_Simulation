@@ -3,6 +3,8 @@
 %   The tests are for single precision and fp16, the latter requiring
 %   Cleve Moler's fp16 class.
 
+addpath('MainFunctions/')
+addpath('MainScripts/')
 clear chop fp options assert_eq
 
 % Check handling of defaults and persistent variable.
