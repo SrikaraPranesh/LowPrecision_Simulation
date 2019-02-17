@@ -7,10 +7,12 @@ clear all; close all;
 addpath('MainFunctions/')
 addpath('MainScripts/')
 
-
+euler_exp_round_modes
 LUTime;
 euler_exp;
 sum_series;
+solve_test;
+matmult;
 
 movefile('*.txt','results')
 movefile('*.mat','results')

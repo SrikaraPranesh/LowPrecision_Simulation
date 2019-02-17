@@ -1,5 +1,6 @@
 %EULER_EXP    Euler's method experiment.
-
+% clearvars -except h;
+clear all;
 a = 0; b = 1;
 y0 = 1e-2; 
 yexact = exp(-1)*y0;
@@ -74,8 +75,8 @@ end
 end
 
 save('euler_exp_results','nrange','edp','efp','a','b','y0')
-
-h = loglog(nrange,efp(:,3),'x--',...
+figure
+h1 = loglog(nrange,efp(:,3),'x--',...
        nrange,efp(:,1),'o-',...
        nrange,efp(:,2),'o--',...
        nrange,efp(:,4),'s-.',...
@@ -93,7 +94,7 @@ legend('fp16 no subnormals','bfloat16', 'fp16 with subnormals',...
        'fp32','fp64','Position',[0.75 0.6 0.1 0.2])
 shg
 set(gcf, 'Color', 'w')
-export_fig ../figs/euler_fig.pdf
+% export_fig ../figs/euler_fig.pdf
 
 % logloe, ecs, 'x', nrange, ecs, '-', ...
 %        nrange, efp, 'o', nrange, efp, '--', ...
