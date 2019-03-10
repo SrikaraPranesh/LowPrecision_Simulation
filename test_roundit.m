@@ -1,11 +1,13 @@
-% function test_roundit
+function test_roundit
 %TEST_ROUNDIT Test the roundit function.
 
 clear roundit options assert_eq
+n = 0;
+rng(1)
 
 y = roundit(pi);     % Check no options case.
 assert_eq(y,3)
-y = roundit(pi,[]);  % Check empty  options case.
+y = roundit(pi,[]);  % Check empty options case.
 assert_eq(y,3)
 
 options.flip = 0;
@@ -79,7 +81,7 @@ end
 
 options.round = 6;
 A = [0.2 0.5 0.9]; Y = [];
-for i = 1:1e3
+for i = 1:1e4
    Y = [Y; roundit(A,options)];
 end
 ratio = sum(Y(:) == 1)/ sum(Y(:) == 0);
@@ -114,12 +116,12 @@ fprintf('All tests successful!\n')
 
 %%%%%%%%%%%%%%%%%%%%%%%
 function assert_eq(a,b)
-persistent n
-if isempty(n), n = 0; end  % First call.
 n = n+1;
 if ~isequal(a,b)
    a, b
    error('Failure')
 end
 fprintf('Test %g succeeded.\n', n )
+end
+
 end

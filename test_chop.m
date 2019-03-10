@@ -1,9 +1,12 @@
-% function test_chop
+function test_chop
 %TEST_CHOP Test the chop function.
 %   The tests are for single precision and fp16.
 
 clear chop fp options options2 assert_eq
 
+rng(1)
+
+n = 0;
 uh = 2^(-11);  % Unit roundoff for fp16.
 pi_h = 6432*uh; % fp16(pi)
     
@@ -57,9 +60,21 @@ assert_eq(options.p,0.5)
 fp.format = 'd'; [c,options] = chop(pi,fp);
 assert_eq(options.format,'d')
 assert_eq(options.subnormal,1)
+assert_eq(options.params, [53 1023])
 [~,fp] = chop;
 assert_eq(fp.format,'d')
 assert_eq(fp.subnormal,1)
+assert_eq(fp.params, [53 1023])
+
+clear fp
+fp.format = 'bfloat16'; [c,options] = chop(pi,fp);
+assert_eq(options.format,'bfloat16')
+assert_eq(options.subnormal,0)
+assert_eq(options.params, [8 127])
+[~,fp] = chop;
+assert_eq(fp.format,'bfloat16')
+assert_eq(fp.subnormal,0)
+assert_eq(fp.params, [8 127])
 
 clear chop
 [~,fp] = chop;
@@ -256,6 +271,22 @@ x = xmins/2; c = chop(x,options); assert_eq(c,0)
 
 end % for i
 
+% Test rounding with CHOP versus native rounding.
+options.format = 's'; 
+m = 100; y = zeros(3,n); z = y;
+for i = 1:m
+x = randn;
+options.round = 2; y(i,1) = chop(x,options);
+options.round = 3; y(i,2) = chop(x,options);
+options.round = 4; y(i,3) = chop(x,options);
+% Use undocumented function to set rounding mode in MATLAB.
+feature('setround',inf), z(i,1) = single(x);
+feature('setround',-inf), z(i,2) = single(x);
+feature('setround',0), z(i,3) = single(x);
+end
+assert_eq(y,z)
+feature('setround',0.5) % Back to round to nearest.
+
 % Double precision tests.
 [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('d');
 options.format = 'd';
@@ -286,15 +317,33 @@ options.round = 4;
 y = chop(x,options);  % Should not change x.
 assert_eq(x,y);
 
+% Test on single inputs.
+clear options
+ps = single(pi);
+pd = double(ps);
+options.format = 'b';
+ys = chop(ps);
+assert_eq(isa(ys,'single'),true)
+yd = chop(pd);
+assert_eq(double(ys),yd)
+
+options.format = 'h'; options.round = 2;
+as = single(rand(n,1)); ad = double(as);
+delta = single(rand(n,1));
+cd = chop(ad + 1e-5*double(delta),options);
+cs = chop(as + 1e-5*delta,options);
+assert_eq(cd,double(cs));
+
 fprintf('All tests successful!\n')
 
 %%%%%%%%%%%%%%%%%%%%%%%
 function assert_eq(a,b)
-persistent n
-if isempty(n), n = 0; end  % First call.
+% if isempty(n), n = 0; end  % First call.
 n = n+1;
 if ~isequal(a,b)
    error('Failure')
 end
 fprintf('Test %g succeeded.\n', n )
+end
+
 end

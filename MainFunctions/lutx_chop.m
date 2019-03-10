@@ -1,9 +1,8 @@
 function [L,U,p] = lutx_chop(A)
-%LUTX_CHOP  Triangular factorization, textbook version
-%   [L,U,p] = lutx_xhop(A) produces a unit lower triangular matrix L,
-%   an upper triangular matrix U, and a permutation vector p,
-%   so that L*U = A(p,:)
-%   It uses the CHOP function to simulate lower precision arithmetic; 
+%LUTX_CHOP Triangular factorization, textbook version [L,U,p] =
+%   lutx_xhop(A) produces a unit lower triangular matrix L, an upper
+%   triangular matrix U, and a permutation vector p, so that L*U = A(p,:)
+%   It requires the CHOP function to simulate lower precision arithmetic.
 
 %   Copyright 2014 Cleve Moler
 %   Copyright 2014 The MathWorks, Inc.
