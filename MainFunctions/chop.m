@@ -109,6 +109,11 @@ elseif ismember(fpopts.format, {'c','custom'})
       if isfield(options,'params') && ~isempty(options.params)
          fpopts.params(1) = options.params(1);
          fpopts.params(2) = options.params(2);
+         if isa(x,'single') && (fpopts.params(1) > 12)
+             error('precision of the custom format must be less than 12 if working in single');
+         elseif isa(x,'double') && (fpopts.params(1) > 26)
+             error('precision of the custom format must be less than 26 if working in double');
+         end
       end    
    elseif ~isfield(fpopts,'params') || isempty(fpopts.params)
       error('Must specify options.params with options.format = ''c''.')
