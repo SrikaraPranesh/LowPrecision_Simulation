@@ -9,7 +9,7 @@ options.precision = 'h';
 % elseif ismember(prec, {'s','single','fp32'})
 % p = 24; % fp32
 % end
-fid = fopen('sum_series.txt','w');
+
 for nmax = [1e2 1e3 1e4 1e5] %  1e6]
 
 for j = [0 1]
@@ -33,10 +33,8 @@ end
 % mysum
 % col_diff = mysum(:,1) - mysum(:,2)
 
-
-fprintf(fid,'%7.0f &  %12.6e &  %12.6e &  %9.2e\\\\ \n',...
-        nmax,mysum(1,2),mysum(1,1),mysum(1,2)-mysum(1,1));
+fprintf('%7.0f &  %12.6e &  %12.6e &  %9.2e\\\\ \n',...
+        nmax,mysum(1,2),mysum(1,1),mysum(1,2)-mysum(1,1))
 
 end
 
-fclose(fid);
