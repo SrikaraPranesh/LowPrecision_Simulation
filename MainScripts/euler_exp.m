@@ -4,6 +4,11 @@ a = 0; b = 1;
 y0 = 1e-2; 
 yexact = exp(-1)*y0;
 
+% Decided not to do so - as brwon and oragen too similar.
+c = get(groot,'defaultAxesColorOrder');
+c([3 6],:) = c([6 3],:); % Swap yellow and light blue.
+set(groot,'defaultAxesColorOrder',c)
+
 % nrange = [1e1 5e1 1e2 5e2 1e3 5e3 1e4 5e4 1e5]
 nrange = round(10.^linspace(1,5,16));
 % [1e1 1e2 1e3 1e4 1e5]; %  1e7 1e8]; %  1e3]; % 1e4 1e5 1e6 1e7];
@@ -76,7 +81,7 @@ save('euler_exp_results','nrange','edp','efp','a','b','y0')
 
 h = loglog(...
        nrange,efp(:,3),'x--',...
-       nrange,efp(:,1),'x--',...
+       nrange,efp(:,1),'*--',...
        nrange,efp(:,2),'o--',...
        nrange,efp(:,4),'s-.',...
        nrange,edp,'d-');
@@ -88,13 +93,19 @@ ylabel('Error','Rotation',0)
 grid
 set(gca,'MinorGridLineStyle','none')
 set(h,'LineWidth',1)
-set(gca,'FontSize',12)
+set(gca,'FontSize',10)
+% For 12pt font:
+% legend('fp16 no subnormals','bfloat16', ...
+%        'fp16 with subnormals',...
+%        'fp32','fp64','Position',[0.75 0.6 0.1 0.2])
 legend('fp16 no subnormals','bfloat16', ...
        'fp16 with subnormals',...
-       'fp32','fp64','Position',[0.75 0.6 0.1 0.2])
+       'fp32','fp64','Position',[0.69 0.6 0.1 0.2])
 shg
 set(gcf, 'Color', 'w')
-% export_fig ../figs/euler_fig.pdf
+export_fig ../figs/euler_fig.pdf
+
+set(groot,'defaultAxesColorOrder','factory')
 
 % logloe, ecs, 'x', nrange, ecs, '-', ...
 %        nrange, efp, 'o', nrange, efp, '--', ...
